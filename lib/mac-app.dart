@@ -30,16 +30,42 @@ macApp() {
                           context,
                           scrollController,
                         ) {
-                          return Center(
-                            child: Text(
-                              "Hi",
-                            ),
+                          return appContent(
+                            context,
                           );
                         },
                   ),
                 ],
               );
             },
+      ),
+    ),
+  );
+}
+
+Widget
+appContent(
+  BuildContext context,
+) {
+  return Padding(
+    padding: const EdgeInsetsGeometry.all(
+      8,
+    ),
+    child: SingleChildScrollView(
+      child: Column(
+        spacing: 8,
+        children: [
+          const MacosSearchField(
+            placeholder: "Search",
+            placeholderStyle: TextStyle(
+              color: MacosColors.placeholderTextColor,
+            ),
+            padding: EdgeInsets.all(
+              8,
+            ),
+            maxLines: 1,
+          ),
+        ],
       ),
     ),
   );
