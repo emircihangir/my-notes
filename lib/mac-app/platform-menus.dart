@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mynotes/mac-app/changenotifiers/notes-list-model.dart';
+import 'package:provider/provider.dart';
 
-const List<
+List<
   PlatformMenu
 >
-platformMenus = [
-  PlatformMenu(
+platformMenus(
+  BuildContext context,
+) => [
+  const PlatformMenu(
     label: "",
     menus: [
       PlatformProvidedMenuItem(
@@ -27,10 +31,22 @@ platformMenus = [
     menus: [
       PlatformMenuItem(
         label: "New Note",
-        shortcut: SingleActivator(
+        shortcut: const SingleActivator(
           LogicalKeyboardKey.keyN,
           meta: true,
         ),
+        onSelected: () {
+          Provider.of<
+                NotesListModel
+              >(
+                context,
+                listen: false,
+              )
+              .addNote(
+                context,
+                noteID: "note0",
+              );
+        },
       ),
     ],
   ),

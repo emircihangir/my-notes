@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
+import 'package:mynotes/mac-app/changenotifiers/notes-list-model.dart';
 import 'package:mynotes/mac-app/platform-menus.dart';
+import 'package:provider/provider.dart';
 
 Widget
 macApp() {
-  return PlatformMenuBar(
-    menus: platformMenus,
-    child: MacosApp(
-      title: "My Notes",
-      theme: MacosThemeData.light(),
-      darkTheme: MacosThemeData.dark(),
-      themeMode: ThemeMode.system,
-      home: MacosWindow(
-        child: Builder(
-          builder:
-              (
-                context,
-              ) {
-                return MacosScaffold(
+  return MacosApp(
+    title: "My Notes",
+    theme: MacosThemeData.light(),
+    darkTheme: MacosThemeData.dark(),
+    themeMode: ThemeMode.system,
+    home: MacosWindow(
+      child: Builder(
+        builder:
+            (
+              context,
+            ) {
+              return PlatformMenuBar(
+                menus: platformMenus(
+                  context,
+                ),
+                child: MacosScaffold(
                   toolBar: const ToolBar(
                     title: Text(
                       'My Notes',
@@ -39,9 +43,9 @@ macApp() {
                           },
                     ),
                   ],
-                );
-              },
-        ),
+                ),
+              );
+            },
       ),
     ),
   );
@@ -56,21 +60,34 @@ appContent(
       8,
     ),
     child: SingleChildScrollView(
-      child: Column(
-        spacing: 8,
-        children: [
-          const MacosSearchField(
-            placeholder: "Search",
-            placeholderStyle: TextStyle(
-              color: MacosColors.placeholderTextColor,
-            ),
-            padding: EdgeInsets.all(
-              8,
-            ),
-            maxLines: 1,
+      child:
+          Consumer<
+            NotesListModel
+          >(
+            builder:
+                (
+                  context,
+                  value,
+                  child,
+                ) {
+                  return Column(
+                    spacing: 8,
+                    children: [
+                      const MacosSearchField(
+                        placeholder: "Search",
+                        placeholderStyle: TextStyle(
+                          color: MacosColors.placeholderTextColor,
+                        ),
+                        padding: EdgeInsets.all(
+                          8,
+                        ),
+                        maxLines: 1,
+                      ),
+                      ...value.notesList,
+                    ],
+                  );
+                },
           ),
-        ],
-      ),
     ),
   );
 }
