@@ -42,8 +42,9 @@ noteEditor(
   int currentIndent() {
     int caretPosition = c.selection.start;
     if (caretPosition ==
-        -1)
+        -1) {
       caretPosition = c.text.length;
+    }
     int currentRowIndex =
         c.text
             .substring(
@@ -70,8 +71,9 @@ noteEditor(
   String currentLine() {
     int caretPosition = c.selection.start;
     if (caretPosition ==
-        -1)
+        -1) {
       caretPosition = c.text.length;
+    }
     int currentRowIndex =
         c.text
             .substring(
@@ -95,8 +97,9 @@ noteEditor(
   void increaseIndent() {
     int caretPosition = c.selection.start;
     if (caretPosition ==
-        -1)
+        -1) {
       caretPosition = c.text.length;
+    }
     int currentRowIndex =
         c.text
             .substring(
@@ -134,8 +137,9 @@ noteEditor(
   ) {
     int caretPosition = c.selection.start;
     if (caretPosition ==
-        -1)
+        -1) {
       caretPosition = c.text.length;
+    }
     String currentText = c.text;
     String newText =
         currentText.substring(
@@ -159,8 +163,9 @@ noteEditor(
   void decreaseIndent() {
     int caretPosition = c.selection.start;
     if (caretPosition ==
-        -1)
+        -1) {
       caretPosition = c.text.length;
+    }
     int currentRowIndex =
         c.text
             .substring(
@@ -212,10 +217,11 @@ noteEditor(
       "    " *
           ci,
     ); // preserve indent
-    if (isList)
+    if (isList) {
       insertAtCaret(
         "- ",
       );
+    }
 
     // Provider.of<tfModel>(context, listen: false).content = c.text;
     return null;
@@ -298,9 +304,6 @@ noteEditor(
                         OptionBintent intent,
                       ) {
                         // retrieve current line's values before inserting \n
-                        print(
-                          "option B",
-                        );
                         return null;
                       },
                 ),
@@ -313,9 +316,6 @@ noteEditor(
                         CmdEnterIntent intent,
                       ) {
                         // retrieve current line's values before inserting \n
-                        print(
-                          "cmd enter",
-                        );
                         return null;
                       },
                 ),
