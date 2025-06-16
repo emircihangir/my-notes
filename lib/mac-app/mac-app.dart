@@ -1,41 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:macos_ui/macos_ui.dart';
-
-const List<
-  PlatformMenu
->
-platformMenus = [
-  PlatformMenu(
-    label: "",
-    menus: [
-      PlatformProvidedMenuItem(
-        type: PlatformProvidedMenuItemType.about,
-      ),
-      PlatformProvidedMenuItem(
-        type: PlatformProvidedMenuItemType.hide,
-      ),
-      PlatformProvidedMenuItem(
-        type: PlatformProvidedMenuItemType.hideOtherApplications,
-      ),
-      PlatformProvidedMenuItem(
-        type: PlatformProvidedMenuItemType.quit,
-      ),
-    ],
-  ),
-  PlatformMenu(
-    label: "Notes",
-    menus: [
-      PlatformMenuItem(
-        label: "New Note",
-        shortcut: SingleActivator(
-          LogicalKeyboardKey.keyN,
-          meta: true,
-        ),
-      ),
-    ],
-  ),
-];
+import 'package:mynotes/mac-app/platform-menus.dart';
 
 Widget
 macApp() {
