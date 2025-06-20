@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mynotes/mac-app/changenotifiers/note-widget-model.dart';
+import 'package:mynotes/mac-app/mac-app.dart';
 import 'package:provider/provider.dart';
 
 List<
@@ -44,7 +45,7 @@ platformMenus(
               )
               .addNote(
                 context,
-                noteID: "note0",
+                noteID: randomID(),
               );
         },
       ),

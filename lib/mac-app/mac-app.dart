@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:mynotes/mac-app/changenotifiers/note-widget-model.dart';
@@ -90,4 +91,17 @@ appContent(
           ),
     ),
   );
+}
+
+String
+randomID() {
+  final random = Random.secure();
+  final chars = 'abcdefghijklmnopqrstuvwxyz0123456789'.split(
+    '',
+  );
+
+  chars.shuffle(
+    random,
+  );
+  return chars.join();
 }
