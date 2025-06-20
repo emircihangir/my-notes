@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
-import 'package:mynotes/mac-app/changenotifiers/notes-list-model.dart';
+import 'package:mynotes/mac-app/changenotifiers/note-widget-model.dart';
 import 'package:mynotes/mac-app/platform-menus.dart';
 import 'package:provider/provider.dart';
 
@@ -62,7 +62,7 @@ appContent(
     child: SingleChildScrollView(
       child:
           Consumer<
-            NotesListModel
+            NoteWidgetsModel
           >(
             builder:
                 (
@@ -83,7 +83,7 @@ appContent(
                         ),
                         maxLines: 1,
                       ),
-                      ...value.notesList,
+                      ...value.noteWidgets,
                     ],
                   );
                 },
