@@ -21,6 +21,34 @@ class NotesModel
   >
   get notes => _notes;
 
+  void closeNote(
+    String noteID,
+  ) {
+    if (_notes[noteID] !=
+        null) {
+      _notes[noteID]!["isOpened"] = false;
+    } else {
+      throw Exception(
+        "The given noteID does not exist in the _notes map. \nGiven noteID: $noteID \n_notes map: $_notes",
+      );
+    }
+    notifyListeners();
+  }
+
+  void openNote(
+    String noteID,
+  ) {
+    if (_notes[noteID] !=
+        null) {
+      _notes[noteID]!["isOpened"] = true;
+    } else {
+      throw Exception(
+        "The given noteID does not exist in the _notes map. \nGiven noteID: $noteID \n_notes map: $_notes",
+      );
+    }
+    notifyListeners();
+  }
+
   void updateNoteContent(
     String noteID,
     String newValue,

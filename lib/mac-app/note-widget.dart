@@ -31,53 +31,66 @@ noteWidget(
   bool isOpened = false,
   String content = "",
 }) {
-  return Selector<
-    NotesModel,
-    String?
-  >(
-    selector:
-        (
-          p0,
-          p1,
-        ) {
-          if (p1.notes[id] !=
-              null) {
-            return p1.notes[id]!["content"];
-          } else {
-            throw Exception(
-              "The given noteID does not exist in the _notes map. \nGiven noteID: $id \n_notes map: ${p1.notes}",
-            );
-          }
-        },
-    builder:
-        (
-          context,
-          value,
-          child,
-        ) {
-          return Row(
-            spacing: 8,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              isOpened
-                  ? Expanded(
-                      child: noteEditor(
+  return Row(
+    spacing: 8,
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      isOpened
+          ? Expanded(
+              child: noteEditor(
+                context,
+                id,
+              ),
+            )
+          : Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  Provider.of<
+                        NotesModel
+                      >(
                         context,
+                        listen: false,
+                      )
+                      .openNote(
                         id,
-                      ),
-                    )
-                  : SizedBox(),
-              Expanded(
+                      );
+                },
                 child: noteCard(
-                  child: textRenderer(
-                    data:
-                        value ??
-                        "",
-                  ),
+                  child:
+                      Selector<
+                        NotesModel,
+                        String?
+                      >(
+                        selector:
+                            (
+                              p0,
+                              p1,
+                            ) {
+                              if (p1.notes[id] !=
+                                  null) {
+                                return p1.notes[id]!["content"];
+                              } else {
+                                throw Exception(
+                                  "The given noteID does not exist in the _notes map. \nGiven noteID: $id \n_notes map: ${p1.notes}",
+                                );
+                              }
+                            },
+                        builder:
+                            (
+                              context,
+                              value,
+                              child,
+                            ) {
+                              return textRenderer(
+                                data:
+                                    value ??
+                                    "",
+                              );
+                            },
+                      ),
                 ),
               ),
-            ],
-          );
-        },
+            ),
+    ],
   );
 }

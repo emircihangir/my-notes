@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:macos_ui/macos_ui.dart';
+import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
+import 'package:provider/provider.dart';
 
 class CustomTabIntent
     extends
@@ -39,6 +41,21 @@ noteEditor(
   String id,
 ) {
   var c = TextEditingController();
+  final notesMap =
+      Provider.of<
+        NotesModel
+      >(
+        context,
+        listen: false,
+      );
+  if (notesMap.notes[id] !=
+      null) {
+    c.text = notesMap.notes[id]!["content"];
+  } else {
+    throw Exception(
+      "The given noteID does not exist in the _notes map. \nGiven noteID: $id \n_notes map: $notesMap",
+    );
+  }
 
   int currentIndent() {
     int caretPosition = c.selection.start;
@@ -316,7 +333,25 @@ noteEditor(
                       (
                         CmdEnterIntent intent,
                       ) {
-                        // retrieve current line's values before inserting \n
+                        Provider.of<
+                              NotesModel
+                            >(
+                              context,
+                              listen: false,
+                            )
+                            .updateNoteContent(
+                              id,
+                              c.text,
+                            );
+                        Provider.of<
+                              NotesModel
+                            >(
+                              context,
+                              listen: false,
+                            )
+                            .closeNote(
+                              id,
+                            );
                         return null;
                       },
                 ),
@@ -332,7 +367,6 @@ noteEditor(
         textAlignVertical: const TextAlignVertical(
           y: -1,
         ),
-        // onChanged: (value) => Provider.of<TextValueModel>(context, listen: false).textValue = value,
         style: TextStyle(
           fontSize: 14,
         ),
