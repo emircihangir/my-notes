@@ -54,6 +54,7 @@ noteWidget(
                   ? Expanded(
                       child: noteEditor(
                         context,
+                        id,
                       ),
                     )
                   : SizedBox(),

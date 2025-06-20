@@ -36,6 +36,7 @@ class CmdEnterIntent
 Widget
 noteEditor(
   BuildContext context,
+  String id,
 ) {
   var c = TextEditingController();
 
