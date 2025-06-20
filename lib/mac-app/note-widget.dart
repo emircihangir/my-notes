@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mynotes/mac-app/changenotifiers/note-contents-model.dart';
 import 'package:mynotes/mac-app/note-editor.dart';
 import 'package:mynotes/mac-app/text-renderer-widget.dart';
+import 'package:provider/provider.dart';
 
 Widget
 noteCard({
@@ -29,24 +31,43 @@ noteWidget(
   bool isOpened = false,
   String content = "",
 }) {
-  return Row(
-    spacing: 8,
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      isOpened
-          ? Expanded(
-              child: noteEditor(
-                context,
+  return Selector<
+    NoteContentsModel,
+    String?
+  >(
+    selector:
+        (
+          p0,
+          p1,
+        ) => p1.noteContents[id],
+    builder:
+        (
+          context,
+          value,
+          child,
+        ) {
+          return Row(
+            spacing: 8,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              isOpened
+                  ? Expanded(
+                      child: noteEditor(
+                        context,
+                      ),
+                    )
+                  : SizedBox(),
+              Expanded(
+                child: noteCard(
+                  child: textRenderer(
+                    data:
+                        value ??
+                        "",
+                  ),
+                ),
               ),
-            )
-          : SizedBox(),
-      Expanded(
-        child: noteCard(
-          child: textRenderer(
-            data: "",
-          ),
-        ),
-      ),
-    ],
+            ],
+          );
+        },
   );
 }
