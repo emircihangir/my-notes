@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
+import 'package:mynotes/mac-app/changenotifiers/note-contents-model.dart';
 import 'package:mynotes/mac-app/changenotifiers/note-widget-model.dart';
 import 'package:mynotes/mac-app/mac-app.dart';
 import 'package:mynotes/android-app.dart';
@@ -29,6 +30,12 @@ main() async {
                 (
                   context,
                 ) => NoteWidgetsModel(),
+          ),
+          ChangeNotifierProvider(
+            create:
+                (
+                  context,
+                ) => NoteContentsModel(),
           ),
         ],
         builder:
