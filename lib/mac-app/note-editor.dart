@@ -41,6 +41,7 @@ noteEditor(
   String id,
 ) {
   var c = TextEditingController();
+
   final notesMap =
       Provider.of<
         NotesModel
@@ -243,6 +244,38 @@ noteEditor(
     return null;
   }
 
+  void saveAndCloseNote() {
+    Provider.of<
+          NotesModel
+        >(
+          context,
+          listen: false,
+        )
+        .updateNoteContent(
+          id,
+          c.text,
+        );
+    Provider.of<
+          NotesModel
+        >(
+          context,
+          listen: false,
+        )
+        .closeNote(
+          id,
+        );
+  }
+
+  var f = FocusNode();
+  f.addListener(
+    () {
+      if (f.hasFocus ==
+          false) {
+        saveAndCloseNote();
+      }
+    },
+  );
+
   return Shortcuts(
     shortcuts:
         <
@@ -381,30 +414,13 @@ noteEditor(
                       (
                         CmdEnterIntent intent,
                       ) {
-                        Provider.of<
-                              NotesModel
-                            >(
-                              context,
-                              listen: false,
-                            )
-                            .updateNoteContent(
-                              id,
-                              c.text,
-                            );
-                        Provider.of<
-                              NotesModel
-                            >(
-                              context,
-                              listen: false,
-                            )
-                            .closeNote(
-                              id,
-                            );
+                        saveAndCloseNote();
                         return null;
                       },
                 ),
           },
       child: MacosTextField(
+        focusNode: f,
         maxLines: null,
         expands: true,
         autofocus: true,
