@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mynotes/mac-app/changenotifiers/note-widget-model.dart';
+import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
 import 'package:mynotes/mac-app/mac-app.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +38,7 @@ platformMenus(
         ),
         onSelected: () {
           Provider.of<
-                NoteWidgetsModel
+                NotesModel
               >(
                 context,
                 listen: false,

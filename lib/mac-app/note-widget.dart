@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mynotes/mac-app/changenotifiers/note-contents-model.dart';
+import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
 import 'package:mynotes/mac-app/note-editor.dart';
 import 'package:mynotes/mac-app/text-renderer-widget.dart';
 import 'package:provider/provider.dart';
@@ -32,14 +32,23 @@ noteWidget(
   String content = "",
 }) {
   return Selector<
-    NoteContentsModel,
+    NotesModel,
     String?
   >(
     selector:
         (
           p0,
           p1,
-        ) => p1.noteContents[id],
+        ) {
+          if (p1.notes[id] !=
+              null) {
+            return p1.notes[id]!["content"];
+          } else {
+            throw Exception(
+              "The given noteID does not exist in the _notes map. \nGiven noteID: $id \n_notes map: ${p1.notes}",
+            );
+          }
+        },
     builder:
         (
           context,

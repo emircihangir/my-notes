@@ -1,7 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
-import 'package:mynotes/mac-app/changenotifiers/note-widget-model.dart';
+import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
+import 'package:mynotes/mac-app/note-widget.dart';
 import 'package:mynotes/mac-app/platform-menus.dart';
 import 'package:provider/provider.dart';
 
@@ -63,7 +64,7 @@ appContent(
     child: SingleChildScrollView(
       child:
           Consumer<
-            NoteWidgetsModel
+            NotesModel
           >(
             builder:
                 (
@@ -84,13 +85,56 @@ appContent(
                         ),
                         maxLines: 1,
                       ),
-                      ...value.noteWidgets,
+                      ...retrieveNoteWidgets(
+                        value.notes,
+                        context,
+                      ),
                     ],
                   );
                 },
           ),
     ),
   );
+}
+
+/// Generates a list of widgets based on the given notes map.
+///
+/// This function is dependent on the NotesModel changenotifier class.
+List<
+  Widget
+>
+retrieveNoteWidgets(
+  Map<
+    String,
+    Map<
+      String,
+      dynamic
+    >
+  >
+  value,
+  BuildContext context,
+) {
+  List<
+    Widget
+  >
+  result = [];
+  value.forEach(
+    (
+      key,
+      value,
+    ) {
+      result.add(
+        noteWidget(
+          context,
+          id: key,
+          isOpened: value["isOpened"],
+          content: value["content"],
+        ),
+      );
+    },
+  );
+
+  return result;
 }
 
 String
