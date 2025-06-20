@@ -240,8 +240,6 @@ noteEditor(
         "- ",
       );
     }
-
-    // Provider.of<tfModel>(context, listen: false).content = c.text;
     return null;
   }
 
@@ -321,7 +319,57 @@ noteEditor(
                       (
                         OptionBintent intent,
                       ) {
-                        // retrieve current line's values before inserting \n
+                        // toggle bold text
+                        String cl = currentLine();
+                        late String modifiedLine;
+                        late int cursorOffset;
+                        if (cl.trimLeft().startsWith(
+                          "* ",
+                        )) {
+                          modifiedLine = cl.replaceFirst(
+                            "* ",
+                            "",
+                          );
+                          cursorOffset = -2;
+                        } else {
+                          modifiedLine = "${"    " * currentIndent()}* ${cl.trimLeft()}";
+                          cursorOffset = 2;
+                        }
+
+                        int caretPosition = c.selection.start;
+                        if (caretPosition ==
+                            -1) {
+                          caretPosition = c.text.length;
+                        }
+                        int currentRowIndex =
+                            c.text
+                                .substring(
+                                  0,
+                                  caretPosition,
+                                )
+                                .split(
+                                  "\n",
+                                )
+                                .length -
+                            1;
+                        List<
+                          String
+                        >
+                        lines = c.text.split(
+                          "\n",
+                        );
+                        lines[currentRowIndex] = modifiedLine;
+                        c.value = TextEditingValue(
+                          text: lines.join(
+                            "\n",
+                          ),
+                          selection: TextSelection.collapsed(
+                            offset:
+                                caretPosition +
+                                cursorOffset,
+                          ),
+                        );
+
                         return null;
                       },
                 ),
