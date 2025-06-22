@@ -440,6 +440,7 @@ class NoteEditor
         child: MacosTextField(
           focusNode: fNode,
           maxLines: null,
+          decoration: null,
           expands: true,
           autofocus: true,
           controller: teController,
