@@ -37,9 +37,8 @@ noteWidget(
     children: [
       isOpened
           ? Expanded(
-              child: noteEditor(
-                context,
-                id,
+              child: NoteEditor(
+                id: id,
               ),
             )
           : Expanded(

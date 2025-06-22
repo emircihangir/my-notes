@@ -51,4 +51,19 @@ platformMenus(
       ),
     ],
   ),
+  PlatformMenu(
+    label: "Format",
+    menus: [
+      PlatformMenuItem(
+        label: "Bold",
+        shortcut: const SingleActivator(
+          LogicalKeyboardKey.keyB,
+          alt: true,
+        ),
+        onSelected: () {
+          cne?.toggleBoldText();
+        },
+      ),
+    ],
+  ),
 ];

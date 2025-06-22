@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
+import 'package:mynotes/mac-app/mac-app.dart';
 import 'package:provider/provider.dart';
 
 class CustomTabIntent
@@ -35,37 +36,26 @@ class CmdEnterIntent
   const CmdEnterIntent();
 }
 
-Widget
-noteEditor(
-  BuildContext context,
-  String id,
-) {
-  var c = TextEditingController();
+class NoteEditor
+    extends
+        StatelessWidget {
+  final String id;
+  NoteEditor({
+    super.key,
+    required this.id,
+  });
 
-  final notesMap =
-      Provider.of<
-        NotesModel
-      >(
-        context,
-        listen: false,
-      );
-  if (notesMap.notes[id] !=
-      null) {
-    c.text = notesMap.notes[id]!["content"];
-  } else {
-    throw Exception(
-      "The given noteID does not exist in the _notes map. \nGiven noteID: $id \n_notes map: $notesMap",
-    );
-  }
+  final TextEditingController teController = TextEditingController();
+  final FocusNode fNode = FocusNode();
 
   int currentIndent() {
-    int caretPosition = c.selection.start;
+    int caretPosition = teController.selection.start;
     if (caretPosition ==
         -1) {
-      caretPosition = c.text.length;
+      caretPosition = teController.text.length;
     }
     int currentRowIndex =
-        c.text
+        teController.text
             .substring(
               0,
               caretPosition,
@@ -76,7 +66,7 @@ noteEditor(
             .length -
         1;
 
-    return c.text
+    return teController.text
             .split(
               "\n",
             )[currentRowIndex]
@@ -88,13 +78,13 @@ noteEditor(
   }
 
   String currentLine() {
-    int caretPosition = c.selection.start;
+    int caretPosition = teController.selection.start;
     if (caretPosition ==
         -1) {
-      caretPosition = c.text.length;
+      caretPosition = teController.text.length;
     }
     int currentRowIndex =
-        c.text
+        teController.text
             .substring(
               0,
               caretPosition,
@@ -107,20 +97,20 @@ noteEditor(
     List<
       String
     >
-    lines = c.text.split(
+    lines = teController.text.split(
       "\n",
     );
     return lines[currentRowIndex];
   }
 
   void increaseIndent() {
-    int caretPosition = c.selection.start;
+    int caretPosition = teController.selection.start;
     if (caretPosition ==
         -1) {
-      caretPosition = c.text.length;
+      caretPosition = teController.text.length;
     }
     int currentRowIndex =
-        c.text
+        teController.text
             .substring(
               0,
               caretPosition,
@@ -133,13 +123,13 @@ noteEditor(
     List<
       String
     >
-    lines = c.text.split(
+    lines = teController.text.split(
       "\n",
     );
     String currentLine = lines[currentRowIndex];
     String modifiedLine = "    $currentLine";
     lines[currentRowIndex] = modifiedLine;
-    c.value = TextEditingValue(
+    teController.value = TextEditingValue(
       text: lines.join(
         "\n",
       ),
@@ -154,12 +144,12 @@ noteEditor(
   void insertAtCaret(
     String character,
   ) {
-    int caretPosition = c.selection.start;
+    int caretPosition = teController.selection.start;
     if (caretPosition ==
         -1) {
-      caretPosition = c.text.length;
+      caretPosition = teController.text.length;
     }
-    String currentText = c.text;
+    String currentText = teController.text;
     String newText =
         currentText.substring(
           0,
@@ -169,7 +159,7 @@ noteEditor(
         currentText.substring(
           caretPosition,
         );
-    c.value = TextEditingValue(
+    teController.value = TextEditingValue(
       text: newText,
       selection: TextSelection.collapsed(
         offset:
@@ -180,13 +170,13 @@ noteEditor(
   }
 
   void decreaseIndent() {
-    int caretPosition = c.selection.start;
+    int caretPosition = teController.selection.start;
     if (caretPosition ==
         -1) {
-      caretPosition = c.text.length;
+      caretPosition = teController.text.length;
     }
     int currentRowIndex =
-        c.text
+        teController.text
             .substring(
               0,
               caretPosition,
@@ -199,7 +189,7 @@ noteEditor(
     List<
       String
     >
-    lines = c.text.split(
+    lines = teController.text.split(
       "\n",
     );
     String currentLine = lines[currentRowIndex];
@@ -208,7 +198,7 @@ noteEditor(
       "",
     );
     lines[currentRowIndex] = modifiedLine;
-    c.value = TextEditingValue(
+    teController.value = TextEditingValue(
       text: lines.join(
         "\n",
       ),
@@ -244,197 +234,219 @@ noteEditor(
     return null;
   }
 
-  void saveAndCloseNote() {
-    Provider.of<
-          NotesModel
-        >(
-          context,
-          listen: false,
-        )
-        .updateNoteContent(
-          id,
-          c.text,
-        );
-    Provider.of<
-          NotesModel
-        >(
-          context,
-          listen: false,
-        )
-        .closeNote(
-          id,
-        );
+  void toggleBoldText() {
+    String cl = currentLine();
+    late String modifiedLine;
+    late int cursorOffset;
+    if (cl.trimLeft().startsWith(
+      "* ",
+    )) {
+      modifiedLine = cl.replaceFirst(
+        "* ",
+        "",
+      );
+      cursorOffset = -2;
+    } else {
+      modifiedLine = "${"    " * currentIndent()}* ${cl.trimLeft()}";
+      cursorOffset = 2;
+    }
+
+    int caretPosition = teController.selection.start;
+    if (caretPosition ==
+        -1) {
+      caretPosition = teController.text.length;
+    }
+    int currentRowIndex =
+        teController.text
+            .substring(
+              0,
+              caretPosition,
+            )
+            .split(
+              "\n",
+            )
+            .length -
+        1;
+    List<
+      String
+    >
+    lines = teController.text.split(
+      "\n",
+    );
+    lines[currentRowIndex] = modifiedLine;
+    teController.value = TextEditingValue(
+      text: lines.join(
+        "\n",
+      ),
+      selection: TextSelection.collapsed(
+        offset:
+            caretPosition +
+            cursorOffset,
+      ),
+    );
   }
 
-  var f = FocusNode();
-  f.addListener(
-    () {
-      if (f.hasFocus ==
-          false) {
-        saveAndCloseNote();
-      }
-    },
-  );
+  @override
+  Widget build(
+    BuildContext context,
+  ) {
+    final notesMap =
+        Provider.of<
+          NotesModel
+        >(
+          context,
+          listen: false,
+        );
+    if (notesMap.notes[id] !=
+        null) {
+      teController.text = notesMap.notes[id]!["content"];
+    } else {
+      throw Exception(
+        "The given noteID does not exist in the _notes map. \nGiven noteID: $id \n_notes map: $notesMap",
+      );
+    }
 
-  return Shortcuts(
-    shortcuts:
-        <
-          LogicalKeySet,
-          Intent
-        >{
-          LogicalKeySet(
-            LogicalKeyboardKey.tab,
-          ): const CustomTabIntent(),
-          LogicalKeySet(
-            LogicalKeyboardKey.shift,
-            LogicalKeyboardKey.tab,
-          ): const CustomShiftTabIntent(),
-          LogicalKeySet(
-            LogicalKeyboardKey.enter,
-          ): const CustomEnterIntent(),
-          LogicalKeySet(
-            LogicalKeyboardKey.alt,
-            LogicalKeyboardKey.keyB,
-          ): const OptionBintent(),
-          LogicalKeySet(
-            LogicalKeyboardKey.meta,
-            LogicalKeyboardKey.enter,
-          ): const CmdEnterIntent(),
-        },
-    child: Actions(
-      actions:
+    void saveAndCloseNote() {
+      Provider.of<
+            NotesModel
+          >(
+            context,
+            listen: false,
+          )
+          .updateNoteContent(
+            id,
+            teController.text,
+          );
+      Provider.of<
+            NotesModel
+          >(
+            context,
+            listen: false,
+          )
+          .closeNote(
+            id,
+          );
+    }
+
+    fNode.addListener(
+      () {
+        if (fNode.hasFocus ==
+            false) {
+          saveAndCloseNote();
+          cne = null;
+        } else {
+          cne = this;
+        }
+      },
+    );
+    return Shortcuts(
+      shortcuts:
           <
-            Type,
-            Action<
-              Intent
-            >
+            LogicalKeySet,
+            Intent
           >{
-            CustomTabIntent:
-                CallbackAction<
-                  CustomTabIntent
-                >(
-                  onInvoke:
-                      (
-                        CustomTabIntent intent,
-                      ) {
-                        increaseIndent();
-                        // Provider.of<tfModel>(context, listen: false).content = c.text;
-                        return null;
-                      },
-                ),
-            CustomShiftTabIntent:
-                CallbackAction<
-                  CustomShiftTabIntent
-                >(
-                  onInvoke:
-                      (
-                        CustomShiftTabIntent intent,
-                      ) {
-                        if (currentIndent() >
-                            0) {
-                          decreaseIndent();
-                        }
-                        // Provider.of<tfModel>(context, listen: false).content = c.text;
-                        return null;
-                      },
-                ),
-            CustomEnterIntent:
-                CallbackAction<
-                  CustomEnterIntent
-                >(
-                  onInvoke: enterInvoke,
-                ),
-            OptionBintent:
-                CallbackAction<
-                  OptionBintent
-                >(
-                  onInvoke:
-                      (
-                        OptionBintent intent,
-                      ) {
-                        // toggle bold text
-                        String cl = currentLine();
-                        late String modifiedLine;
-                        late int cursorOffset;
-                        if (cl.trimLeft().startsWith(
-                          "* ",
-                        )) {
-                          modifiedLine = cl.replaceFirst(
-                            "* ",
-                            "",
-                          );
-                          cursorOffset = -2;
-                        } else {
-                          modifiedLine = "${"    " * currentIndent()}* ${cl.trimLeft()}";
-                          cursorOffset = 2;
-                        }
-
-                        int caretPosition = c.selection.start;
-                        if (caretPosition ==
-                            -1) {
-                          caretPosition = c.text.length;
-                        }
-                        int currentRowIndex =
-                            c.text
-                                .substring(
-                                  0,
-                                  caretPosition,
-                                )
-                                .split(
-                                  "\n",
-                                )
-                                .length -
-                            1;
-                        List<
-                          String
-                        >
-                        lines = c.text.split(
-                          "\n",
-                        );
-                        lines[currentRowIndex] = modifiedLine;
-                        c.value = TextEditingValue(
-                          text: lines.join(
-                            "\n",
-                          ),
-                          selection: TextSelection.collapsed(
-                            offset:
-                                caretPosition +
-                                cursorOffset,
-                          ),
-                        );
-
-                        return null;
-                      },
-                ),
-            CmdEnterIntent:
-                CallbackAction<
-                  CmdEnterIntent
-                >(
-                  onInvoke:
-                      (
-                        CmdEnterIntent intent,
-                      ) {
-                        saveAndCloseNote();
-                        return null;
-                      },
-                ),
+            LogicalKeySet(
+              LogicalKeyboardKey.tab,
+            ): const CustomTabIntent(),
+            LogicalKeySet(
+              LogicalKeyboardKey.shift,
+              LogicalKeyboardKey.tab,
+            ): const CustomShiftTabIntent(),
+            LogicalKeySet(
+              LogicalKeyboardKey.enter,
+            ): const CustomEnterIntent(),
+            LogicalKeySet(
+              LogicalKeyboardKey.alt,
+              LogicalKeyboardKey.keyB,
+            ): const OptionBintent(),
+            LogicalKeySet(
+              LogicalKeyboardKey.meta,
+              LogicalKeyboardKey.enter,
+            ): const CmdEnterIntent(),
           },
-      child: MacosTextField(
-        focusNode: f,
-        maxLines: null,
-        expands: true,
-        autofocus: true,
-        controller: c,
-        padding: const EdgeInsets.all(
-          16,
-        ),
-        textAlignVertical: const TextAlignVertical(
-          y: -1,
-        ),
-        style: TextStyle(
-          fontSize: 14,
+      child: Actions(
+        actions:
+            <
+              Type,
+              Action<
+                Intent
+              >
+            >{
+              CustomTabIntent:
+                  CallbackAction<
+                    CustomTabIntent
+                  >(
+                    onInvoke:
+                        (
+                          CustomTabIntent intent,
+                        ) {
+                          increaseIndent();
+                          return null;
+                        },
+                  ),
+              CustomShiftTabIntent:
+                  CallbackAction<
+                    CustomShiftTabIntent
+                  >(
+                    onInvoke:
+                        (
+                          CustomShiftTabIntent intent,
+                        ) {
+                          if (currentIndent() >
+                              0) {
+                            decreaseIndent();
+                          }
+                          return null;
+                        },
+                  ),
+              CustomEnterIntent:
+                  CallbackAction<
+                    CustomEnterIntent
+                  >(
+                    onInvoke: enterInvoke,
+                  ),
+              OptionBintent:
+                  CallbackAction<
+                    OptionBintent
+                  >(
+                    onInvoke:
+                        (
+                          OptionBintent intent,
+                        ) {
+                          toggleBoldText();
+                          return null;
+                        },
+                  ),
+              CmdEnterIntent:
+                  CallbackAction<
+                    CmdEnterIntent
+                  >(
+                    onInvoke:
+                        (
+                          CmdEnterIntent intent,
+                        ) {
+                          saveAndCloseNote();
+                          return null;
+                        },
+                  ),
+            },
+        child: MacosTextField(
+          focusNode: fNode,
+          maxLines: null,
+          expands: true,
+          autofocus: true,
+          controller: teController,
+          padding: const EdgeInsets.all(
+            16,
+          ),
+          textAlignVertical: const TextAlignVertical(
+            y: -1,
+          ),
+          style: TextStyle(
+            fontSize: 14,
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }

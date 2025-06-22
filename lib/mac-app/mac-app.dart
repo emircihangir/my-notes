@@ -2,9 +2,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
+import 'package:mynotes/mac-app/note-editor.dart';
 import 'package:mynotes/mac-app/note-widget.dart';
 import 'package:mynotes/mac-app/platform-menus.dart';
 import 'package:provider/provider.dart';
+
+/// cne: current note editor.
+NoteEditor?
+cne;
 
 Widget
 macApp() {

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
+import 'package:mynotes/mac-app/changenotifiers/minor-variables-model.dart';
 import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
 import 'package:mynotes/mac-app/mac-app.dart';
 import 'package:mynotes/android-app.dart';
@@ -29,6 +30,12 @@ main() async {
                 (
                   context,
                 ) => NotesModel(),
+          ),
+          ChangeNotifierProvider(
+            create:
+                (
+                  context,
+                ) => MinorVariablesModel(),
           ),
         ],
         builder:
