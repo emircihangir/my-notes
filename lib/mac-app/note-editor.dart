@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -328,6 +329,12 @@ class NoteEditor
           );
     }
 
+    void deleteNote() {
+      log(
+        "deleting note",
+      );
+    }
+
     fNode.addListener(
       () {
         if (fNode.hasFocus ==
@@ -437,7 +444,7 @@ class NoteEditor
           autofocus: true,
           controller: teController,
           padding: const EdgeInsets.all(
-            16,
+            13,
           ),
           textAlignVertical: const TextAlignVertical(
             y: -1,
