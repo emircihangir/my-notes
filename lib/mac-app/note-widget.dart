@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:macos_ui/macos_ui.dart';
 import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
 import 'package:mynotes/mac-app/note-editor.dart';
 import 'package:mynotes/mac-app/text-renderer-widget.dart';
@@ -11,7 +10,6 @@ noteCard({
 }) {
   return Container(
     decoration: BoxDecoration(
-      color: MacosColors.textBackgroundColor,
       borderRadius: BorderRadius.circular(
         7,
       ),

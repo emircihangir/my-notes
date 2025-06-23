@@ -1,8 +1,6 @@
 import 'dart:developer';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:macos_ui/macos_ui.dart';
 import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
 import 'package:mynotes/mac-app/mac-app.dart';
 import 'package:provider/provider.dart';
@@ -437,16 +435,13 @@ class NoteEditor
                         },
                   ),
             },
-        child: MacosTextField(
+        child: TextField(
           focusNode: fNode,
           maxLines: null,
           decoration: null,
           expands: true,
           autofocus: true,
           controller: teController,
-          padding: const EdgeInsets.all(
-            13,
-          ),
           textAlignVertical: const TextAlignVertical(
             y: -1,
           ),
