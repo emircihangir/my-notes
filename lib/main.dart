@@ -29,7 +29,7 @@ main() async {
             (
               context,
               child,
-            ) => macApp(),
+            ) => MacApp(),
       ),
     );
   } else if (Platform.isAndroid) {

@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:macos_ui/macos_ui.dart';
 import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
 import 'package:mynotes/mac-app/note-editor.dart';
 import 'package:mynotes/mac-app/note-widget.dart';
@@ -11,57 +10,81 @@ import 'package:provider/provider.dart';
 NoteEditor?
 cne;
 
-Widget
-macApp() {
-  return MacosApp(
-    title: "My Notes",
-    theme: MacosThemeData.light(),
-    darkTheme: MacosThemeData.dark(),
-    themeMode: ThemeMode.system,
-    home: MacosWindow(
-      child: Builder(
-        builder:
-            (
-              context,
-            ) {
-              return PlatformMenuBar(
-                menus: platformMenus(
-                  context,
-                ),
-                child: MacosScaffold(
-                  toolBar: const ToolBar(
-                    title: Text(
-                      'My Notes',
-                      textAlign: TextAlign.center,
-                    ),
-                    automaticallyImplyLeading: false,
-                    centerTitle: true,
-                  ),
-                  children: [
-                    ContentArea(
-                      builder:
-                          (
-                            context,
-                            scrollController,
-                          ) {
-                            return appContent(
-                              context,
-                            );
-                          },
-                    ),
-                  ],
-                ),
-              );
-            },
+class MacApp
+    extends
+        StatelessWidget {
+  const MacApp({
+    super.key,
+  });
+
+  @override
+  Widget build(
+    BuildContext context,
+  ) {
+    return MaterialApp(
+      title: "My Notes",
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        popupMenuTheme: PopupMenuThemeData(
+          color: Colors.white,
+        ),
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.white,
+          toolbarHeight: 30,
+          titleTextStyle: TextStyle(
+            fontSize: 11,
+            color: Colors.black,
+          ),
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+        ),
       ),
-    ),
-  );
+      home: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            "My Notes",
+          ),
+          actions: [
+            IconButton(
+              padding: EdgeInsets.all(
+                0,
+              ),
+              onPressed: () {},
+              icon: Icon(
+                Icons.add,
+              ),
+            ),
+            PopupMenuButton(
+              padding: EdgeInsetsGeometry.all(
+                0,
+              ),
+              itemBuilder:
+                  (
+                    context,
+                  ) {
+                    return [
+                      PopupMenuItem(
+                        child: Text(
+                          "asd",
+                        ),
+                      ),
+                    ];
+                  },
+            ),
+          ],
+        ),
+        body: appContent(),
+      ),
+    );
+  }
 }
 
 Widget
-appContent(
-  BuildContext context,
-) {
+appContent() {
   return Padding(
     padding: const EdgeInsetsGeometry.all(
       8,
@@ -80,16 +103,16 @@ appContent(
                   return Column(
                     spacing: 8,
                     children: [
-                      const MacosSearchField(
-                        placeholder: "Search",
-                        placeholderStyle: TextStyle(
-                          color: MacosColors.placeholderTextColor,
-                        ),
-                        padding: EdgeInsets.all(
-                          8,
-                        ),
-                        maxLines: 1,
-                      ),
+                      // const MacosSearchField(
+                      //   placeholder: "Search",
+                      //   placeholderStyle: TextStyle(
+                      //     color: MacosColors.placeholderTextColor,
+                      //   ),
+                      //   padding: EdgeInsets.all(
+                      //     8,
+                      //   ),
+                      //   maxLines: 1,
+                      // ),
                       ...retrieveNoteWidgets(
                         value.notes,
                         context,
