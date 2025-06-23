@@ -42,4 +42,9 @@ class NotesModel extends ChangeNotifier {
     _notes[noteID] = {"id": noteID, "isOpened": true, "content": noteContent};
     notifyListeners();
   }
+
+  void removeNote(String id) {
+    _notes.remove(id);
+    notifyListeners();
+  }
 }

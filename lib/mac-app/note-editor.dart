@@ -25,6 +25,10 @@ class CmdEnterIntent extends Intent {
   const CmdEnterIntent();
 }
 
+class CmdKDIntent extends Intent {
+  const CmdKDIntent();
+}
+
 class NoteEditor extends StatelessWidget {
   final String id;
   NoteEditor({super.key, required this.id});
@@ -150,10 +154,12 @@ class NoteEditor extends StatelessWidget {
     void saveAndCloseNote() {
       Provider.of<NotesModel>(context, listen: false).updateNoteContent(id, teController.text);
       Provider.of<NotesModel>(context, listen: false).closeNote(id);
+      log("Saved and closed note.\nNote id: $id");
     }
 
     void deleteNote() {
-      log("deleting note");
+      Provider.of<NotesModel>(context, listen: false).removeNote(id);
+      log("Deleted note.\nNote id: $id");
     }
 
     fNode.addListener(() {
@@ -172,6 +178,8 @@ class NoteEditor extends StatelessWidget {
         LogicalKeySet(LogicalKeyboardKey.enter): const CustomEnterIntent(),
         LogicalKeySet(LogicalKeyboardKey.alt, LogicalKeyboardKey.keyB): const OptionBintent(),
         LogicalKeySet(LogicalKeyboardKey.meta, LogicalKeyboardKey.enter): const CmdEnterIntent(),
+        LogicalKeySet(LogicalKeyboardKey.meta, LogicalKeyboardKey.keyK, LogicalKeyboardKey.keyD):
+            const CmdKDIntent(),
       },
       child: Actions(
         actions: <Type, Action<Intent>>{
@@ -199,6 +207,12 @@ class NoteEditor extends StatelessWidget {
           CmdEnterIntent: CallbackAction<CmdEnterIntent>(
             onInvoke: (CmdEnterIntent intent) {
               saveAndCloseNote();
+              return null;
+            },
+          ),
+          CmdKDIntent: CallbackAction<CmdKDIntent>(
+            onInvoke: (CmdKDIntent intent) {
+              deleteNote();
               return null;
             },
           ),
