@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-Widget
-androidApp() {
+Widget androidApp() {
   return Placeholder();
 }

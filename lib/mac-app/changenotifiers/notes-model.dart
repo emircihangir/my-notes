@@ -1,31 +1,12 @@
 import 'package:flutter/widgets.dart';
 
-class NotesModel
-    extends
-        ChangeNotifier {
-  final Map<
-    String,
-    Map<
-      String,
-      dynamic
-    >
-  >
-  _notes = {};
+class NotesModel extends ChangeNotifier {
+  final Map<String, Map<String, dynamic>> _notes = {};
 
-  Map<
-    String,
-    Map<
-      String,
-      dynamic
-    >
-  >
-  get notes => _notes;
+  Map<String, Map<String, dynamic>> get notes => _notes;
 
-  void closeNote(
-    String noteID,
-  ) {
-    if (_notes[noteID] !=
-        null) {
+  void closeNote(String noteID) {
+    if (_notes[noteID] != null) {
       _notes[noteID]!["isOpened"] = false;
     } else {
       throw Exception(
@@ -35,11 +16,8 @@ class NotesModel
     notifyListeners();
   }
 
-  void openNote(
-    String noteID,
-  ) {
-    if (_notes[noteID] !=
-        null) {
+  void openNote(String noteID) {
+    if (_notes[noteID] != null) {
       _notes[noteID]!["isOpened"] = true;
     } else {
       throw Exception(
@@ -49,12 +27,8 @@ class NotesModel
     notifyListeners();
   }
 
-  void updateNoteContent(
-    String noteID,
-    String newValue,
-  ) {
-    if (_notes[noteID] !=
-        null) {
+  void updateNoteContent(String noteID, String newValue) {
+    if (_notes[noteID] != null) {
       _notes[noteID]!["content"] = newValue;
     } else {
       throw Exception(
@@ -64,16 +38,8 @@ class NotesModel
     notifyListeners();
   }
 
-  void addNote(
-    BuildContext context, {
-    required String noteID,
-    String noteContent = "",
-  }) {
-    _notes[noteID] = {
-      "id": noteID,
-      "isOpened": true,
-      "content": noteContent,
-    };
+  void addNote(BuildContext context, {required String noteID, String noteContent = ""}) {
+    _notes[noteID] = {"id": noteID, "isOpened": true, "content": noteContent};
     notifyListeners();
   }
 }

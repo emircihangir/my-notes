@@ -6,35 +6,18 @@ import 'package:mynotes/mac-app/mac-app.dart';
 import 'package:mynotes/android-app.dart';
 import 'package:provider/provider.dart';
 
-void
-main() async {
+void main() async {
   if (Platform.isMacOS) {
     runApp(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(
-            create:
-                (
-                  context,
-                ) => NotesModel(),
-          ),
-          ChangeNotifierProvider(
-            create:
-                (
-                  context,
-                ) => MinorVariablesModel(),
-          ),
+          ChangeNotifierProvider(create: (context) => NotesModel()),
+          ChangeNotifierProvider(create: (context) => MinorVariablesModel()),
         ],
-        builder:
-            (
-              context,
-              child,
-            ) => MacApp(),
+        builder: (context, child) => MacApp(),
       ),
     );
   } else if (Platform.isAndroid) {
-    runApp(
-      androidApp(),
-    );
+    runApp(androidApp());
   }
 }

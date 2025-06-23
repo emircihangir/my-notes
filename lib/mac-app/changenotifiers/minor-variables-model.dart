@@ -1,5 +1,3 @@
 import 'package:flutter/cupertino.dart';
 
-class MinorVariablesModel
-    extends
-        ChangeNotifier {}
+class MinorVariablesModel extends ChangeNotifier {}
