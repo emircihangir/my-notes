@@ -438,13 +438,9 @@ class NoteEditor
         child: TextField(
           focusNode: fNode,
           maxLines: null,
-          decoration: null,
-          expands: true,
           autofocus: true,
           controller: teController,
-          textAlignVertical: const TextAlignVertical(
-            y: -1,
-          ),
+          cursorColor: Colors.black,
           style: TextStyle(
             fontSize: 14,
           ),

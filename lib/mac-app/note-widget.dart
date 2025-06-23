@@ -13,6 +13,10 @@ noteCard({
       borderRadius: BorderRadius.circular(
         7,
       ),
+      border: Border.all(
+        color: Colors.grey.shade300,
+        width: 1.3,
+      ),
     ),
     child: child,
   );

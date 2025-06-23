@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
 import 'package:mynotes/mac-app/note-editor.dart';
 import 'package:mynotes/mac-app/note-widget.dart';
-import 'package:mynotes/mac-app/platform-menus.dart';
 import 'package:provider/provider.dart';
 
 /// cne: current note editor.
@@ -25,11 +24,29 @@ class MacApp
       title: "My Notes",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        inputDecorationTheme: InputDecorationTheme(
+          border: InputBorder.none,
+          fillColor: Colors.black.withAlpha(
+            10,
+          ),
+          filled: true,
+          contentPadding: EdgeInsets.all(
+            16,
+          ),
+        ),
+        textSelectionTheme: TextSelectionThemeData(
+          selectionColor: Colors.grey,
+          cursorColor: Colors.black,
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
         popupMenuTheme: PopupMenuThemeData(
           color: Colors.white,
         ),
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: AppBarTheme(
+          surfaceTintColor: Colors.grey,
           backgroundColor: Colors.white,
           toolbarHeight: 30,
           titleTextStyle: TextStyle(
@@ -50,10 +67,22 @@ class MacApp
           ),
           actions: [
             IconButton(
+              tooltip: "New Note",
               padding: EdgeInsets.all(
                 0,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Provider.of<
+                      NotesModel
+                    >(
+                      context,
+                      listen: false,
+                    )
+                    .addNote(
+                      context,
+                      noteID: randomID(),
+                    );
+              },
               icon: Icon(
                 Icons.add,
               ),
