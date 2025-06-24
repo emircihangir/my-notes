@@ -43,7 +43,10 @@ Widget noteWidget(
                       }
                     },
                     builder: (context, value, child) {
-                      return textRenderer(data: value ?? "");
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: textRenderer(data: value ?? ""),
+                      );
                     },
                   ),
                 ),
