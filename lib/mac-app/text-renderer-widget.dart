@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 Widget boldTextWidget({required String data}) =>
     Text(data.replaceFirst("* ", ""), style: const TextStyle(fontWeight: FontWeight.bold));
 Widget bulletTextWidget({required String data}) => Text(data.replaceFirst("- ", "\u2022 "));
+Widget tagTextWidget({required String data}) =>
+    Text(data.replaceFirst("# ", ""), style: TextStyle(color: Colors.black.withAlpha(100)));
 
 Widget textRenderer({required String data}) {
   List<Widget> textBlocks = [];
@@ -14,6 +16,9 @@ Widget textRenderer({required String data}) {
     } else if (dataLine.trimLeft().startsWith("- ")) {
       // bullet list
       textBlocks.add(bulletTextWidget(data: dataLine));
+    } else if (dataLine.trimLeft().startsWith("# ")) {
+      // tag
+      textBlocks.add(tagTextWidget(data: dataLine));
     } else {
       // plain text
       textBlocks.add(Text(dataLine));
