@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mynotes/mac-app/mac-app.dart';
-import 'package:provider/provider.dart';
+import 'package:mynotes/mac-app/providers.dart';
 
 class CustomTabIntent extends Intent {
   const CustomTabIntent();
@@ -29,7 +29,7 @@ class CmdKDIntent extends Intent {
   const CmdKDIntent();
 }
 
-class NoteEditor extends StatelessWidget {
+class NoteEditor extends ConsumerWidget {
   final String id;
   NoteEditor({super.key, required this.id});
 
@@ -141,10 +141,11 @@ class NoteEditor extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final notesMap = Provider.of<NotesModel>(context, listen: false);
-    if (notesMap.notes[id] != null) {
-      teController.text = notesMap.notes[id]!["content"];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notesMap = ref.read(notesProvider);
+
+    if (notesMap[id] != null) {
+      teController.text = notesMap[id]!["content"];
     } else {
       throw Exception(
         "The given noteID does not exist in the _notes map. \nGiven noteID: $id \n_notes map: $notesMap",
@@ -152,13 +153,13 @@ class NoteEditor extends StatelessWidget {
     }
 
     void saveAndCloseNote() {
-      Provider.of<NotesModel>(context, listen: false).updateNoteContent(id, teController.text);
-      Provider.of<NotesModel>(context, listen: false).closeNote(id);
+      ref.read(notesProvider.notifier).updateNoteContent(id, teController.text);
+      ref.read(notesProvider.notifier).closeNote(id);
       log("Saved and closed note.\nNote id: $id");
     }
 
     void deleteNote() {
-      Provider.of<NotesModel>(context, listen: false).removeNote(id);
+      ref.read(notesProvider.notifier).removeNote(id);
       log("Deleted note.\nNote id: $id");
     }
 

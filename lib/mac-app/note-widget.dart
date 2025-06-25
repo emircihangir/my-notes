@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mynotes/mac-app/note-editor.dart';
+import 'package:mynotes/mac-app/providers.dart';
 import 'package:mynotes/mac-app/text-renderer-widget.dart';
-import 'package:provider/provider.dart';
 
 Widget noteCard({required Widget child}) {
   return Container(
@@ -14,12 +14,7 @@ Widget noteCard({required Widget child}) {
   );
 }
 
-Widget noteWidget(
-  BuildContext context, {
-  required String id,
-  bool isOpened = false,
-  String content = "",
-}) {
+Widget noteWidget({required String id, bool isOpened = false, String content = ""}) {
   return Row(
     spacing: 8,
     mainAxisAlignment: MainAxisAlignment.center,
@@ -27,26 +22,17 @@ Widget noteWidget(
       isOpened
           ? Expanded(child: NoteEditor(id: id))
           : Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  Provider.of<NotesModel>(context, listen: false).openNote(id);
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final notes = ref.watch(notesProvider);
+
+                  return GestureDetector(
+                    onTap: () {
+                      ref.read(notesProvider.notifier).openNote(id);
+                    },
+                    child: noteCard(child: textRenderer(data: notes[id]!["content"] ?? "")),
+                  );
                 },
-                child: noteCard(
-                  child: Selector<NotesModel, String?>(
-                    selector: (p0, p1) {
-                      if (p1.notes[id] != null) {
-                        return p1.notes[id]!["content"];
-                      } else {
-                        throw Exception(
-                          "The given noteID does not exist in the _notes map. \nGiven noteID: $id \n_notes map: ${p1.notes}",
-                        );
-                      }
-                    },
-                    builder: (context, value, child) {
-                      return textRenderer(data: value ?? "");
-                    },
-                  ),
-                ),
               ),
             ),
     ],

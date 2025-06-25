@@ -1,18 +1,18 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mynotes/mac-app/note-editor.dart';
 import 'package:mynotes/mac-app/note-widget.dart';
-import 'package:provider/provider.dart';
+import 'package:mynotes/mac-app/providers.dart';
 
 /// cne: current note editor.
 NoteEditor? cne;
 
-class MacApp extends StatelessWidget {
+class MacApp extends ConsumerWidget {
   const MacApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: "My Notes",
       debugShowCheckedModeBanner: false,
@@ -50,10 +50,7 @@ class MacApp extends StatelessWidget {
               tooltip: "New Note",
               padding: EdgeInsets.all(0),
               onPressed: () {
-                Provider.of<NotesModel>(
-                  context,
-                  listen: false,
-                ).addNote(context, noteID: randomID());
+                ref.read(notesProvider.notifier).addNote(noteID: randomID());
               },
               icon: Icon(Icons.add_rounded),
             ),
@@ -81,24 +78,11 @@ Widget appContent() {
   return Padding(
     padding: const EdgeInsetsGeometry.all(8),
     child: SingleChildScrollView(
-      child: Consumer<NotesModel>(
-        builder: (context, value, child) {
-          return Column(
-            spacing: 8,
-            children: [
-              // const MacosSearchField(
-              //   placeholder: "Search",
-              //   placeholderStyle: TextStyle(
-              //     color: MacosColors.placeholderTextColor,
-              //   ),
-              //   padding: EdgeInsets.all(
-              //     8,
-              //   ),
-              //   maxLines: 1,
-              // ),
-              ...retrieveNoteWidgets(value.notes, context),
-            ],
-          );
+      child: Consumer(
+        builder: (context, ref, child) {
+          final notes = ref.watch(notesProvider);
+          print(notes);
+          return Column(spacing: 8, children: retrieveNoteWidgets(notes, context));
         },
       ),
     ),
@@ -108,12 +92,10 @@ Widget appContent() {
 /// Generates a list of widgets based on the given notes map.
 ///
 /// This function is dependent on the NotesModel changenotifier class.
-List<Widget> retrieveNoteWidgets(Map<String, Map<String, dynamic>> value, BuildContext context) {
+List<Widget> retrieveNoteWidgets(Map value, BuildContext context) {
   List<Widget> result = [];
   value.forEach((key, value) {
-    result.add(
-      noteWidget(context, id: key, isOpened: value["isOpened"], content: value["content"]),
-    );
+    result.add(noteWidget(id: key, isOpened: value["isOpened"], content: value["content"]));
   });
 
   return result;

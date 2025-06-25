@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mynotes/mac-app/changenotifiers/notes-model.dart';
 import 'package:mynotes/mac-app/mac-app.dart';
-import 'package:provider/provider.dart';
 
+// TODO: Delete this?
 List<PlatformMenu> platformMenus(BuildContext context) => [
   const PlatformMenu(
     label: "",
@@ -21,7 +20,7 @@ List<PlatformMenu> platformMenus(BuildContext context) => [
         label: "New Note",
         shortcut: const SingleActivator(LogicalKeyboardKey.keyN, meta: true),
         onSelected: () {
-          Provider.of<NotesModel>(context, listen: false).addNote(context, noteID: randomID());
+          // Provider.of<NotesModel>(context, listen: false).addNote(context, noteID: randomID());
         },
       ),
     ],
