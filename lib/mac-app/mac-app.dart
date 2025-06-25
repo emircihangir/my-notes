@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mynotes/mac-app/note-class.dart';
 import 'package:mynotes/mac-app/note-editor.dart';
 import 'package:mynotes/mac-app/note-widget.dart';
 import 'package:mynotes/mac-app/providers.dart';
@@ -81,8 +82,8 @@ Widget appContent() {
       child: Consumer(
         builder: (context, ref, child) {
           final notes = ref.watch(notesProvider);
-          print(notes);
-          return Column(spacing: 8, children: retrieveNoteWidgets(notes, context));
+
+          return Column(spacing: 8, children: retrieveNoteWidgets(notes));
         },
       ),
     ),
@@ -92,11 +93,11 @@ Widget appContent() {
 /// Generates a list of widgets based on the given notes map.
 ///
 /// This function is dependent on the NotesModel changenotifier class.
-List<Widget> retrieveNoteWidgets(Map value, BuildContext context) {
+List<Widget> retrieveNoteWidgets(List<Note> value) {
   List<Widget> result = [];
-  value.forEach((key, value) {
-    result.add(noteWidget(id: key, isOpened: value["isOpened"], content: value["content"]));
-  });
+  for (Note v in value) {
+    result.add(noteWidget(id: v.id, isOpened: v.isOpened, content: v.content));
+  }
 
   return result;
 }

@@ -142,15 +142,7 @@ class NoteEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final notesMap = ref.read(notesProvider);
-
-    if (notesMap[id] != null) {
-      teController.text = notesMap[id]!["content"];
-    } else {
-      throw Exception(
-        "The given noteID does not exist in the _notes map. \nGiven noteID: $id \n_notes map: $notesMap",
-      );
-    }
+    teController.text = ref.read(notesProvider).where((e) => e.id == id).first.content;
 
     void saveAndCloseNote() {
       ref.read(notesProvider.notifier).updateNoteContent(id, teController.text);

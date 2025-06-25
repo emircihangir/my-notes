@@ -24,13 +24,13 @@ Widget noteWidget({required String id, bool isOpened = false, String content = "
           : Expanded(
               child: Consumer(
                 builder: (context, ref, child) {
-                  final notes = ref.watch(notesProvider);
+                  final thisNote = ref.watch(notesProvider).where((e) => e.id == id).first;
 
                   return GestureDetector(
                     onTap: () {
                       ref.read(notesProvider.notifier).openNote(id);
                     },
-                    child: noteCard(child: textRenderer(data: notes[id]!["content"] ?? "")),
+                    child: noteCard(child: textRenderer(data: thisNote.content)),
                   );
                 },
               ),

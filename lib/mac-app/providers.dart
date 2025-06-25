@@ -1,46 +1,41 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mynotes/mac-app/mac-app.dart';
+import 'package:mynotes/mac-app/note-class.dart';
 
-class NotesNotifier extends Notifier<Map> {
+class NotesNotifier extends Notifier<List<Note>> {
   @override
-  Map build() => {};
+  List<Note> build() => [];
 
   void closeNote(String noteID) {
-    if (state[noteID] != null) {
-      state[noteID]!["isOpened"] = false;
-    } else {
-      throw Exception(
-        "The given noteID does not exist in the notes map. \nGiven noteID: $noteID \nstate map: $state",
-      );
-    }
+    List<Note> stateCopy = state.toList();
+    stateCopy.where((e) => e.id == noteID).first.isOpened = false;
+    state = stateCopy;
   }
 
   void openNote(String noteID) {
-    if (state[noteID] != null) {
-      state[noteID]!["isOpened"] = true;
-    } else {
-      throw Exception(
-        "The given noteID does not exist in the notes map. \nGiven noteID: $noteID \nstate map: $state",
-      );
-    }
+    List<Note> stateCopy = state.toList();
+    stateCopy.where((e) => e.id == noteID).first.isOpened = true;
+    state = stateCopy;
   }
 
   void updateNoteContent(String noteID, String newValue) {
-    if (state[noteID] != null) {
-      state[noteID]!["content"] = newValue;
-    } else {
-      throw Exception(
-        "The given noteID does not exist in the notes map. \nGiven noteID: $noteID \nstate map: $state",
-      );
-    }
+    List<Note> stateCopy = state.toList();
+    stateCopy.where((e) => e.id == noteID).first.content = newValue;
+    state = stateCopy;
   }
 
   void addNote({required String noteID, String noteContent = ""}) {
-    state[noteID] = {"id": noteID, "isOpened": true, "content": noteContent};
+    Note newNote = Note(id: randomID(), isOpened: true);
+    List<Note> stateCopy = state.toList();
+    stateCopy.add(newNote);
+    state = stateCopy;
   }
 
   void removeNote(String id) {
-    state.remove(id);
+    List<Note> stateCopy = state.toList();
+    stateCopy.removeWhere((e) => e.id == id);
+    state = stateCopy;
   }
 }
 
-final notesProvider = NotifierProvider<NotesNotifier, Map>(() => NotesNotifier());
+final notesProvider = NotifierProvider<NotesNotifier, List<Note>>(() => NotesNotifier());
