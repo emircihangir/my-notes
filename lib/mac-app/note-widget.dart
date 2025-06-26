@@ -30,7 +30,12 @@ Widget noteWidget({required String id, bool isOpened = false, String content = "
                     onTap: () {
                       ref.read(notesProvider.notifier).openNote(id);
                     },
-                    child: noteCard(child: textRenderer(data: thisNote.content)),
+                    child: noteCard(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: textRenderer(data: thisNote.content),
+                      ),
+                    ),
                   );
                 },
               ),

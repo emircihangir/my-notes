@@ -1,12 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 TextSpan boldText(String data) => TextSpan(
   text: data,
   style: const TextStyle(fontWeight: FontWeight.bold),
 );
-// Widget bulletTextWidget({required String data}) => Text(data.replaceFirst("- ", "\u2022 "));
+
 TextSpan tagText(String data) => TextSpan(
   text: data,
   style: TextStyle(color: Colors.black.withAlpha(100)),
@@ -19,8 +17,6 @@ TextSpan plainText(String data) => TextSpan(text: data);
 
 Widget textRenderer({required String data}) {
   List<TextSpan> textSpanChildrenBuilder() {
-    final stopWatch = Stopwatch()..start();
-
     var dataSplit = data.split("");
     List<TextSpan> result = [];
 
@@ -96,8 +92,6 @@ Widget textRenderer({required String data}) {
     }
 
     result.add(plainText(plainStack.join("")));
-    stopWatch.stop();
-    log("elapsed time: ${stopWatch.elapsedMicroseconds}"); // around 240
     return result;
   }
 
